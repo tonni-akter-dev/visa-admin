@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import ComponentCard from "../../common/ComponentCard";
 import Switch from "../switch/Switch";
 
 export default function ToggleSwitch() {
@@ -8,7 +7,7 @@ export default function ToggleSwitch() {
     console.log("Switch is now:", checked ? "ON" : "OFF");
   };
   return (
-    <ComponentCard title="Toggle switch input">
+    <div >
       <div className="flex gap-4">
         <Switch
           label="Default"
@@ -37,6 +36,6 @@ export default function ToggleSwitch() {
         />
         <Switch label="Disabled" disabled={true} color="gray" />
       </div>
-    </ComponentCard>
+    </div>
   );
 }

@@ -99,6 +99,7 @@ const AddVisa = () => {
         setMessage(`❌ Error: ${errorData.msg || "Something went wrong"}`);
       }
     } catch (error) {
+      console.log(error)
       setMessage("❌ Network error");
     } finally {
       setLoading(false);
@@ -136,7 +137,7 @@ const AddVisa = () => {
     {key === "location" || key === "passportCountry" ? (
       <select
         name={key}
-        value={(formData as any)[key]}
+        value={(formData)[key]}
         onChange={handleChange}
         className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
         required={key === "location"}
@@ -192,7 +193,7 @@ const AddVisa = () => {
       <input
         type={key.toLowerCase().includes("date") ? "date" : "text"}
         name={key}
-        value={(formData as any)[key]}
+      value={formData?.[key as keyof typeof formData] ?? ""} 
         onChange={handleChange}
         className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
         required={requiredFields.includes(key)}

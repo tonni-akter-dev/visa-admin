@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Select from "../Select";
 import MultiSelect from "../MultiSelect";
@@ -28,7 +27,6 @@ export default function SelectInputs() {
   ];
 
   return (
-    <ComponentCard title="Select Inputs">
       <div className="space-y-6">
         <div>
           <Label>Select Input</Label>
@@ -56,6 +54,5 @@ export default function SelectInputs() {
           </p>
         </div>
       </div>
-    </ComponentCard>
   );
 }

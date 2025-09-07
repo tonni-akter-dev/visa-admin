@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from 'react';
-import ComponentCard from '../../common/ComponentCard';
 import Label from '../Label';
 import Input from '../input/InputField';
 import Select from '../Select';
@@ -18,7 +17,6 @@ export default function DefaultInputs() {
     console.log("Selected value:", value);
   };
   return (
-    <ComponentCard title="Default Inputs">
       <div className="space-y-6">
         <div>
           <Label>Input</Label>
@@ -115,6 +113,5 @@ export default function DefaultInputs() {
           </div>
         </div>
       </div>
-    </ComponentCard>
   );
 }

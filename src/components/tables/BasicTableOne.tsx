@@ -28,19 +28,23 @@ interface Visa {
 
 export default function VisaTable() {
   const [visas, setVisas] = useState<Visa[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   // Fetch visas from API
   useEffect(() => {
-    const fetchVisas = async () => {
+    const fetchVisas = async (): Promise<void> => {
       try {
         const res = await fetch("https://visa-consultancy-backend.onrender.com/api/visas");
         if (!res.ok) throw new Error("Failed to fetch visas");
-        const data = await res.json();
-        setVisas(data); // assuming API returns an array of visas
-      } catch (err: any) {
-        setError(err.message);
+        const data: Visa[] = await res.json();
+        setVisas(data); // API should return an array of Visa objects
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unexpected error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -49,16 +53,19 @@ export default function VisaTable() {
     fetchVisas();
   }, []);
 
-
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string): Promise<void> => {
     try {
       const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/visas/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete visa");
-      setVisas(visas.filter((visa) => visa._id !== id)); // update UI
-    } catch (err: any) {
-      console.error(err.message);
+      setVisas((prev) => prev.filter((visa) => visa._id !== id)); // update UI
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      } else {
+        console.error("An unexpected error occurred");
+      }
     }
   };
 
@@ -132,12 +139,12 @@ export default function VisaTable() {
                   </TableCell>
                   <TableCell className="px-5 py-3">
                     <div className="flex gap-2">
-                      <button
-                        // onClick={() => handleEdit(visa._id)}
+                      <Link
+                        href={`/edit-visa/${visa._id}`}
                         className="px-3 py-1 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600"
                       >
-                        <Link href={`/edit-visa/${visa._id}`}>Edit</Link>
-                      </button>
+                        Edit
+                      </Link>
                       <button
                         onClick={() => handleDelete(visa._id)}
                         className="px-3 py-1 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import ComponentCard from "../../common/ComponentCard";
 import { useDropzone } from "react-dropzone";
 
 const DropzoneComponent: React.FC = () => {
@@ -19,7 +18,6 @@ const DropzoneComponent: React.FC = () => {
     },
   });
   return (
-    <ComponentCard title="Dropzone">
       <div className="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500">
         <form
           {...getRootProps()}
@@ -70,7 +68,6 @@ const DropzoneComponent: React.FC = () => {
           </div>
         </form>
       </div>
-    </ComponentCard>
   );
 };
 
