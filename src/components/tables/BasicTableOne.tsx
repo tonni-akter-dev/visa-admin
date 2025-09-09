@@ -73,39 +73,39 @@ export default function VisaTable() {
   if (error) return <p className="p-4 text-red-500">{error}</p>;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1300px]">
+    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="max-w-full ">
+        <div className="">
           <h3 className="p-4 text-2xl">All Visa List</h3>
           <Table>
             {/* Table Header */}
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Family Name
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Given Names
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   DOB
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Passport No.
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Visa Grant Number
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Grant Date
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Expiry Date
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Status
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-gray-500">
+                <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   Actions
                 </TableCell>
               </TableRow>
@@ -115,29 +115,29 @@ export default function VisaTable() {
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {visas.map((visa) => (
                 <TableRow key={visa._id}>
-                  <TableCell className="px-5 py-3">{visa.familyName}</TableCell>
-                  <TableCell className="px-5 py-3">{visa.givenNames}</TableCell>
-                  <TableCell className="px-5 py-3">
+                  <TableCell className="px-3 py-3">{visa.familyName}</TableCell>
+                  <TableCell className="px-3 py-3">{visa.givenNames}</TableCell>
+                  <TableCell className="px-3 py-3">
                     {visa.dateOfBirth
                       ? new Date(visa.dateOfBirth).toLocaleDateString()
                       : "-"}
                   </TableCell>
-                  <TableCell className="px-5 py-3">{visa.documentNumber}</TableCell>
-                  <TableCell className="px-5 py-3">{visa.visaGrantNumber}</TableCell>
-                  <TableCell className="px-5 py-3">
+                  <TableCell className="px-3 py-3">{visa.documentNumber}</TableCell>
+                  <TableCell className="px-3 py-3">{visa.visaGrantNumber}</TableCell>
+                  <TableCell className="px-3 py-3">
                     {visa.visaGrantDate
                       ? new Date(visa.visaGrantDate).toLocaleDateString()
                       : "-"}
                   </TableCell>
-                  <TableCell className="px-5 py-3">
+                  <TableCell className="px-3 py-3">
                     {visa.visaExpiryDate
                       ? new Date(visa.visaExpiryDate).toLocaleDateString()
                       : "-"}
                   </TableCell>
-                  <TableCell className="px-5 py-3 font-medium">
+                  <TableCell className="px-3 py-3 font-medium">
                     {visa.visaStatus}
                   </TableCell>
-                  <TableCell className="px-5 py-3">
+                  <TableCell className="px-3 py-3">
                     <div className="flex gap-2">
                       <Link
                         href={`/edit-visa/${visa._id}`}
