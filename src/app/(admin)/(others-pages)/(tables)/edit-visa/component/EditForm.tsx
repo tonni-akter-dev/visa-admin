@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 interface Country {
   name: string;
@@ -28,15 +29,7 @@ interface Visa {
   transactionRef: string;
 }
 
-// ✅ Convert to DD-MM-YYYY for backend
-const formatDateForBackend = (date: string) => {
-  if (!date) return "";
-  const d = new Date(date);
-  if (isNaN(d.getTime())) return date;
-  return `${String(d.getDate()).padStart(2, "0")}-${String(
-    d.getMonth() + 1
-  ).padStart(2, "0")}-${d.getFullYear()}`;
-};
+
 
 // ✅ Convert to YYYY-MM-DD for input fields
 const formatDateForInput = (date: string) => {
@@ -80,7 +73,7 @@ const excludedFields = ["_id", "createdAt", "updatedAt", "__v", "mustNotArriveAf
   useEffect(() => {
     const fetchVisa = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/visas/${id}`);
+        const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/visas/${id}`);
         if (!res.ok) throw new Error("Failed to fetch visa");
         const data = await res.json();
 
@@ -143,16 +136,29 @@ const handleSubmit = async (e: React.FormEvent) => {
       enterBeforeDate: formData.enterBeforeDate,
     };
 
-    const res = await fetch(`http://localhost:5000/api/visas/${id}`, {
+    const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/visas/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToSend),
     });
 
     if (!res.ok) throw new Error("Failed to update visa");
+     Swal.fire({
+      icon: "success",
+      title: "Updated!",
+      text: "Visa has been updated successfully.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
     router.push("/visa-list");
-  } catch (err: any) {
-    alert(err.message);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Something went wrong";
+    Swal.fire({
+      icon: "error",
+      title: "Update Failed",
+      text: message,
+    });
   } finally {
     setSaving(false);
   }

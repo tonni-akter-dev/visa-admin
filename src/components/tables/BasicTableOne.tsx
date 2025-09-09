@@ -8,7 +8,8 @@ import {
   TableRow,
 } from "../ui/table";
 import Link from "next/link";
-
+  import Swal from "sweetalert2";
+  
 interface Visa {
   _id: string;
   familyName: string;
@@ -53,21 +54,52 @@ export default function VisaTable() {
     fetchVisas();
   }, []);
 
-  const handleDelete = async (id: string): Promise<void> => {
-    try {
-      const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/visas/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete visa");
-      setVisas((prev) => prev.filter((visa) => visa._id !== id)); // update UI
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.message);
-      } else {
-        console.error("An unexpected error occurred");
-      }
-    }
-  };
+
+
+const handleDelete = async (id: string): Promise<void> => {
+  try {
+    // 🔹 Step 1: Ask for confirmation
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) return; // if cancelled, exit
+
+    // 🔹 Step 2: Call API
+    const res = await fetch(
+      `https://visa-consultancy-backend.onrender.com/api/visas/${id}`,
+      { method: "DELETE" }
+    );
+
+    if (!res.ok) throw new Error("Failed to delete visa");
+
+    // 🔹 Step 3: Update UI
+    setVisas((prev) => prev.filter((visa) => visa._id !== id));
+
+    // 🔹 Step 4: Success message
+    Swal.fire({
+      icon: "success",
+      title: "Deleted!",
+      text: "Visa has been deleted successfully.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "An unexpected error occurred";
+    Swal.fire({
+      icon: "error",
+      title: "Delete Failed",
+      text: message,
+    });
+  }
+};
 
   if (loading) return <p className="p-4">Loading visas...</p>;
   if (error) return <p className="p-4 text-red-500">{error}</p>;

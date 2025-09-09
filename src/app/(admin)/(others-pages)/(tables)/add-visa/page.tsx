@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 interface Country {
   name: string;
 }
@@ -30,6 +31,7 @@ const AddVisa = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [countries, setCountries] = useState<Country[]>([]);
+  const router = useRouter();
 
   // Predefined options
   const visaApplicants = ["Primary", "Secondary"];
@@ -60,51 +62,74 @@ const AddVisa = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch("https://visa-consultancy-backend.onrender.com/api/visas", {
+  try {
+    const res = await fetch(
+      "https://visa-consultancy-backend.onrender.com/api/visas",
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+      }
+    );
+
+    if (res.ok) {
+      // Reset form
+      setFormData({
+        familyName: "",
+        givenNames: "",
+        visaDescription: "",
+        dateOfBirth: "",
+        documentNumber: "",
+        visaGrantNumber: "",
+        visaClass: "",
+        visaApplicant: "Primary",
+        visaGrantDate: "",
+        visaExpiryDate: "",
+        location: "",
+        visaStatus: "In Effect",
+        periodOfStay: "",
+        visaType: "Visitor",
+        enterBeforeDate: "",
+        passportCountry: "",
+        applicationId: "",
+        transactionRef: "",
       });
 
-      if (res.ok) {
-        setMessage("✅ Visa added successfully!");
-        setFormData({
-          familyName: "",
-          givenNames: "",
-          visaDescription: "",
-          dateOfBirth: "",
-          documentNumber: "",
-          visaGrantNumber: "",
-          visaClass: "",
-          visaApplicant: "Primary",
-          visaGrantDate: "",
-          visaExpiryDate: "",
-          location: "",
-          visaStatus: "In Effect",
-          periodOfStay: "",
-          visaType: "Visitor",
-          enterBeforeDate: "",
-          passportCountry: "",
-          applicationId: "",
-          transactionRef: "",
-        });
-      } else {
-        const errorData = await res.json();
-        setMessage(`❌ Error: ${errorData.msg || "Something went wrong"}`);
-      }
-    } catch (error) {
-      console.log(error)
-      setMessage("❌ Network error");
-    } finally {
-      setLoading(false);
+      // ✅ Success alert
+      Swal.fire({
+        icon: "success",
+        title: "Visa Added!",
+        text: "The visa was added successfully.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      router.push("/visa-list");
+    } else {
+      const errorData = await res.json();
+
+      // ❌ Error alert
+      Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: errorData.msg || "Something went wrong",
+      });
     }
-  };
+  } catch (error: unknown) {
+    // ❌ Network error
+    Swal.fire({
+      icon: "error",
+      title: "Network Error",
+      text: "Could not connect to the server.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const requiredFields = [
     "familyName",
