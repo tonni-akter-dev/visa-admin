@@ -29,7 +29,6 @@ const AddVisa = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [countries, setCountries] = useState<Country[]>([]);
   const router = useRouter();
 
@@ -111,8 +110,6 @@ const handleSubmit = async (e: React.FormEvent) => {
       router.push("/visa-list");
     } else {
       const errorData = await res.json();
-
-      // ❌ Error alert
       Swal.fire({
         icon: "error",
         title: "Failed!",
@@ -120,12 +117,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       });
     }
   } catch (error: unknown) {
-    // ❌ Network error
     Swal.fire({
       icon: "error",
       title: "Network Error",
       text: "Could not connect to the server.",
     });
+    console.log(error)
   } finally {
     setLoading(false);
   }
@@ -238,17 +235,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           {loading ? "Adding Visa..." : "Add Visa"}
         </button>
 
-        {message && (
-          <p
-            className={`text-center text-sm font-medium mt-2 ${
-              message.startsWith("✅")
-                ? "text-green-500 dark:text-green-400"
-                : "text-red-500 dark:text-red-400"
-            }`}
-          >
-            {message}
-          </p>
-        )}
+       
       </form>
     </div>
   );
