@@ -13,7 +13,7 @@ import Link from "next/link";
 interface Visa {
   _id: string;
   familyName: string;
-  givenNames: string;
+  givenName: string;
   dateOfBirth: string;
   documentNumber: string;
   visaDescription: string;
@@ -117,7 +117,7 @@ const handleDelete = async (id: string): Promise<void> => {
                   Family Name
                 </TableCell>
                 <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
-                  Given Names
+                  Given Name
                 </TableCell>
                 <TableCell isHeader className="px-3 py-3 font-medium text-gray-500">
                   DOB
@@ -148,7 +148,7 @@ const handleDelete = async (id: string): Promise<void> => {
               {visas.map((visa) => (
                 <TableRow key={visa._id}>
                   <TableCell className="px-3 py-3">{visa.familyName}</TableCell>
-                  <TableCell className="px-3 py-3">{visa.givenNames}</TableCell>
+                  <TableCell className="px-3 py-3">{visa.givenName}</TableCell>
                   <TableCell className="px-3 py-3">
                     {visa.dateOfBirth
                       ? new Date(visa.dateOfBirth).toLocaleDateString()

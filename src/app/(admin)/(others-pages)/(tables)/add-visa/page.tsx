@@ -5,24 +5,21 @@ import Swal from "sweetalert2";
 interface Country {
   name: string;
 }
-
 const AddVisa = () => {
   const [formData, setFormData] = useState({
     familyName: "",
-    givenNames: "",
+    givenName: "",
     visaDescription: "",
     dateOfBirth: "",
     documentNumber: "",
     visaGrantNumber: "",
-    visaClass: "",
-    visaApplicant: "Primary",
+    visaApplicant: "",
     visaGrantDate: "",
     visaExpiryDate: "",
     location: "",
     visaStatus: "In Effect",
     periodOfStay: "",
     visaType: "Visitor",
-    enterBeforeDate: "",
     passportCountry: "",
     applicationId: "",
     transactionRef: "",
@@ -31,9 +28,6 @@ const AddVisa = () => {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
   const router = useRouter();
-
-  // Predefined options
-  const visaApplicants = ["Primary", "Secondary"];
   const visaStatuses = ["In Effect", "Expired", "Cancelled"];
   const visaTypes = ["Visitor", "Student", "Work", "Transit"];
 
@@ -79,20 +73,18 @@ const handleSubmit = async (e: React.FormEvent) => {
       // Reset form
       setFormData({
         familyName: "",
-        givenNames: "",
+        givenName: "",
         visaDescription: "",
         dateOfBirth: "",
         documentNumber: "",
         visaGrantNumber: "",
-        visaClass: "",
-        visaApplicant: "Primary",
+        visaApplicant: "",
         visaGrantDate: "",
         visaExpiryDate: "",
         location: "",
         visaStatus: "In Effect",
         periodOfStay: "",
         visaType: "Visitor",
-        enterBeforeDate: "",
         passportCountry: "",
         applicationId: "",
         transactionRef: "",
@@ -130,7 +122,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   const requiredFields = [
     "familyName",
-    "givenNames",
+    "givenName",
     "visaDescription",
     "documentNumber",
     "visaGrantNumber",
@@ -171,20 +163,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </option>
         ))}
       </select>
-    ) : key === "visaApplicant" ? (
-      <select
-        name="visaApplicant"
-        value={formData.visaApplicant}
-        onChange={handleChange}
-        className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-      >
-        {visaApplicants.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    ) : key === "visaStatus" ? (
+    )  : key === "visaStatus" ? (
       <select
         name="visaStatus"
         value={formData.visaStatus}
