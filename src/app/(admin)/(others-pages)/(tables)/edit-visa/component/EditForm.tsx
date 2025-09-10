@@ -64,7 +64,7 @@ const EditForm = () => {
     "visaExpiryDate",
   ];
 // 🔥 Add this list of excluded fields (top of component)
-const excludedFields = ["_id", "createdAt", "updatedAt", "__v", "mustNotArriveAfter"];
+const excludedFields = ["_id", "createdAt", "updatedAt", "__v", "mustNotArriveAfter","enterBeforeDate"];
 
   // Fetch visa data
   useEffect(() => {
@@ -73,7 +73,7 @@ const excludedFields = ["_id", "createdAt", "updatedAt", "__v", "mustNotArriveAf
         const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/visas/${id}`);
         if (!res.ok) throw new Error("Failed to fetch visa");
         const data = await res.json();
-
+console.log(data)
         setFormData({
           ...data,
           dateOfBirth: formatDateForInput(data.dateOfBirth),
@@ -169,8 +169,8 @@ const handleSubmit = async (e: React.FormEvent) => {
         className="grid grid-cols-1 md:grid-cols-3 gap-6"
       >
         {Object.keys(formData)
-  .filter((key) => !excludedFields.includes(key))
-  .map((key) => (
+        .filter((key) => !excludedFields.includes(key))
+          .map((key) => (
           <div key={key}>
             <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 capitalize">
               {key}
