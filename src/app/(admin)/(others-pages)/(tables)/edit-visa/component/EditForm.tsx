@@ -10,12 +10,11 @@ interface Country {
 interface Visa {
   _id: string;
   familyName: string;
-  givenNames: string;
+  givenName: string;
   visaDescription: string;
   dateOfBirth: string;
   documentNumber: string;
   visaGrantNumber: string;
-  visaClass: string;
   visaApplicant: string;
   visaGrantDate: string;
   visaExpiryDate: string;
@@ -23,7 +22,6 @@ interface Visa {
   visaStatus: string;
   periodOfStay: string;
   visaType: string;
-  enterBeforeDate: string;
   passportCountry: string;
   applicationId: string;
   transactionRef: string;
@@ -52,13 +50,12 @@ const EditForm = () => {
   const [saving, setSaving] = useState(false);
 
   // Predefined options
-  const visaApplicants = ["Primary", "Secondary"];
   const visaStatuses = ["In Effect", "Expired", "Cancelled"];
   const visaTypes = ["Visitor", "Student", "Work", "Transit"];
 
   const requiredFields = [
     "familyName",
-    "givenNames",
+    "givenName",
     "visaDescription",
     "documentNumber",
     "visaGrantNumber",
@@ -82,7 +79,6 @@ const excludedFields = ["_id", "createdAt", "updatedAt", "__v", "mustNotArriveAf
           dateOfBirth: formatDateForInput(data.dateOfBirth),
           visaGrantDate: formatDateForInput(data.visaGrantDate),
           visaExpiryDate: formatDateForInput(data.visaExpiryDate),
-          enterBeforeDate: formatDateForInput(data.enterBeforeDate),
         });
       } catch (err) {
         console.error(err);
@@ -133,7 +129,6 @@ const handleSubmit = async (e: React.FormEvent) => {
       dateOfBirth: formData.dateOfBirth,
       visaGrantDate: formData.visaGrantDate,
       visaExpiryDate: formData.visaExpiryDate,
-      enterBeforeDate: formData.enterBeforeDate,
     };
 
     const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/visas/${id}`, {
@@ -193,19 +188,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                 {countries.map((c) => (
                   <option key={c.name} value={c.name}>
                     {c.name}
-                  </option>
-                ))}
-              </select>
-            ) : key === "visaApplicant" ? (
-              <select
-                name="visaApplicant"
-                value={formData.visaApplicant}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border px-3 py-2 dark:bg-gray-800"
-              >
-                {visaApplicants.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
                   </option>
                 ))}
               </select>

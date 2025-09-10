@@ -4,6 +4,7 @@ import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,41 +14,59 @@ export default function SignUpForm() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle submit
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch("https://visa-consultancy-backend.onrender.com/api/auth/signup", {
+  try {
+    const res = await fetch(
+      "https://visa-consultancy-backend.onrender.com/api/auth/signup",
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Signup Failed",
+        text: data.msg || "Something went wrong",
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Signup Successful 🎉",
+        text: "Your account has been created!",
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setMessage(data.msg || "Signup failed");
-      } else {
-        setMessage("Signup successful 🎉");
-        localStorage.setItem("token", data.token); // Save token
-      }
-    } catch (err) {
-      console.error("Signup error:", err);
-      setMessage("Something went wrong");
-    } finally {
-      setLoading(false);
+      localStorage.setItem("token", data.token); 
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
     }
-  };
+  } catch (err) {
+    console.error("Signup error:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong. Please try again later.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
@@ -125,8 +144,6 @@ export default function SignUpForm() {
                     </span>
                   </div>
                 </div>
-
-                {/* Submit Button */}
                 <div>
                   <button
                     type="submit"
@@ -138,13 +155,6 @@ export default function SignUpForm() {
                 </div>
               </div>
             </form>
-
-            {message && (
-              <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-300">
-                {message}
-              </p>
-            )}
-
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 Already have an account?{" "}
