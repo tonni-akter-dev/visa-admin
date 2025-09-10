@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect, useRef, useState,useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
-
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
@@ -27,8 +26,9 @@ const navItems: NavItem[] = [
   {
     name: "Tables",
     icon: <TableIcon />,
-    subItems: [{ name: "Visa List", path: "/visa-list", pro: false },
-      { name: "Add new visa", path: "/add-visa", pro: false }
+    subItems: [
+      { name: "Visa List", path: "/visa-list", pro: false },
+      { name: "Add new visa", path: "/add-visa", pro: false },
     ],
   },
 ];
@@ -36,6 +36,50 @@ const navItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+
+  const [openSubmenu, setOpenSubmenu] = useState<{
+    type: "main" | "others";
+    index: number;
+  } | null>(null);
+
+  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
+    {}
+  );
+
+  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const isActive = useCallback((path: string) => path === pathname, [pathname]);
+
+  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
+    setOpenSubmenu((prevOpenSubmenu) => {
+      if (
+        prevOpenSubmenu &&
+        prevOpenSubmenu.type === menuType &&
+        prevOpenSubmenu.index === index
+      ) {
+        return null;
+      }
+      return { type: menuType, index };
+    });
+  };
+
+  const handleLogout = () => {
+    // Clear auth data here (adjust as needed)
+    localStorage.removeItem("token");
+    window.location.href = "/signin";
+  };
+
+  useEffect(() => {
+    if (openSubmenu !== null) {
+      const key = `${openSubmenu.type}-${openSubmenu.index}`;
+      if (subMenuRefs.current[key]) {
+        setSubMenuHeight((prevHeights) => ({
+          ...prevHeights,
+          [key]: subMenuRefs.current[key]?.scrollHeight || 0,
+        }));
+      }
+    }
+  }, [openSubmenu]);
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -162,40 +206,7 @@ const AppSidebar: React.FC = () => {
       ))}
     </ul>
   );
-  const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others";
-    index: number;
-  } | null>(null);
-  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
-  );
-  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
-   const isActive = useCallback((path: string) => path === pathname, [pathname]);
 
-  useEffect(() => {
-    if (openSubmenu !== null) {
-      const key = `${openSubmenu.type}-${openSubmenu.index}`;
-      if (subMenuRefs.current[key]) {
-        setSubMenuHeight((prevHeights) => ({
-          ...prevHeights,
-          [key]: subMenuRefs.current[key]?.scrollHeight || 0,
-        }));
-      }
-    }
-  }, [openSubmenu]);
-
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
-    setOpenSubmenu((prevOpenSubmenu) => {
-      if (
-        prevOpenSubmenu &&
-        prevOpenSubmenu.type === menuType &&
-        prevOpenSubmenu.index === index
-      ) {
-        return null;
-      }
-      return { type: menuType, index };
-    });
-  };
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
@@ -209,15 +220,16 @@ const AppSidebar: React.FC = () => {
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div
         className={`text-2xl py-8 flex  ${
           !isExpanded && !isHovered ? "text-xm lg:justify-center" : "justify-start"
         }`}
       >
-                 Visa
+        Visa
       </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar flex-1">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             <div>
@@ -236,8 +248,24 @@ const AppSidebar: React.FC = () => {
               </h2>
               {renderMenuItems(navItems, "main")}
             </div>
-        </div>
+          </div>
         </nav>
+        {/* Logout button */}
+        <div className="mt-auto mb-4">
+          <button
+            onClick={handleLogout}
+            className={`menu-item group w-full justify-start ${
+              isExpanded || isHovered || isMobileOpen ? "" : "lg:justify-center"
+            }`}
+          >
+            {/* <span className="menu-item-icon-inactive">
+              <LogOutIcon />
+            </span> */}
+            {(isExpanded || isHovered || isMobileOpen) && (
+              <span className="menu-item-text">Logout</span>
+            )}
+          </button>
+        </div>
       </div>
     </aside>
   );
