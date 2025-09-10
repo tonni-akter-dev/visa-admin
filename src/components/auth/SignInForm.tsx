@@ -4,6 +4,7 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -14,6 +15,7 @@ export default function SignInForm() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +58,7 @@ export default function SignInForm() {
           email: "",
           password: "",
         });
+         router.push("/visa-list");
       }
     } catch (err) {
       console.error("Login error:", err);

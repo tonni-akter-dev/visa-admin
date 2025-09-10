@@ -116,7 +116,6 @@ const excludedFields = ["_id", "createdAt", "updatedAt", "__v", "mustNotArriveAf
   };
 
   // Handle submit
-// Instead of converting to DD-MM-YYYY, just keep it ISO
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   if (!formData) return;

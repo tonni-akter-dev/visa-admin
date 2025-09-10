@@ -3,6 +3,7 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -14,6 +15,7 @@ export default function SignUpForm() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +57,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         email: "",
         password: "",
       });
+        router.push("/visa-list");
     }
   } catch (err) {
     console.error("Signup error:", err);
